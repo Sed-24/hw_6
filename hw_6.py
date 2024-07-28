@@ -9,34 +9,20 @@ class Field:
         return str(self.value)
 
 
-# Декоратор
-def decor(func):
-
-    def inner(value):
-        try:
-            return func(value)
-        except ValueError:
-            return "Невірне значення!"
-    return inner
-
-
-@ decor
 class Name(Field):
     def __init__(self, value):
         if len(value) > 0:
             super().__init__(value)
 
 
-@ decor
 class Phone(Field):
     def __init__(self, value: str):
-        if len(value) == 10 and int(value):
+        if len(value) == 10 and value.isdigit():
             super().__init__(value)
         else:
             raise ValueError
 
 
-@ decor
 class Record:
     def __init__(self, name: str):
         self.name = Name(name)
@@ -53,15 +39,17 @@ class Record:
     def edit_phone(self, old_phone, new_phone):
         for ph in self.phones:
             if ph.value == old_phone:
-                ph.value = new_phone
-                break
+                if len(new_phone) == 10 and new_phone.isdigit():
+                    if len(ph.value) == 10 and ph.value.isdigit():
+                        ph.value = new_phone
+                        break
             else:
                 raise ValueError
 
     def find_phone(self, phone):
         for ph in self.phones:
             if ph.value == phone:
-                return ph.value
+                return phone
 
     def __str__(self):
         return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
@@ -87,7 +75,7 @@ book = AddressBook()
 # Створення запису для John
 john_record = Record("John")
 john_record.add_phone("1234567890")
-john_record.add_phone("5555555555")
+john_record.add_phone("9999999999")
 
 # Додавання запису John до адресної книги
 book.add_record(john_record)
@@ -103,7 +91,7 @@ print(book)
 
 # Знаходження та редагування телефону для John
 john = book.find("John")
-john.edit_phone("1234567890", "1112223333")
+john.edit_phone("1234567890", "5555555555")
 
 print(john)  # Виведення: Contact name: John, phones: 1112223333; 5555555555
 
