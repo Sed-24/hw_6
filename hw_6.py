@@ -40,16 +40,15 @@ class Record:
         for ph in self.phones:
             if ph.value == old_phone:
                 if len(new_phone) == 10 and new_phone.isdigit():
-                    if len(ph.value) == 10 and ph.value.isdigit():
-                        ph.value = new_phone
-                        break
-            else:
-                raise ValueError
+                    ph.value = new_phone
+                    break
+        else:
+            raise ValueError
 
     def find_phone(self, phone):
         for ph in self.phones:
             if ph.value == phone:
-                return phone
+                return self.phones[phone]
 
     def __str__(self):
         return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
